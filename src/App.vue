@@ -2,13 +2,13 @@
   <div class="cv">
     <div class="cv-container">
       <div class="dataInputs">
-        <LeftInputs v-if="nextRef === ''" :class="{ 'hide-left': nextRef !== '' }"   @data-input="handleDataInput" @delete-skill="deleteSkill" @next="next" />
-        <RightInputs v-else :class="{ 'show-right': nextRef !== '' }" />
+        <LeftInputs v-if="nextRef === ''" @data-input="handleDataInput" @delete-skill="deleteSkill" @next="next" />
+        <RightInputs v-else @prev="prev" @data-input-right="handleDataRightInput" />
       </div>
       <div class="preview">
         <div class="cv-content">
           <LeftCV :data="inputData" :next="nextRef" />
-          <Right :data="inputData"  />
+          <Right :data="inputData" :dataLeft="inputRightData" />
         </div>
       </div>
     </div>
@@ -35,6 +35,12 @@ let inputData = ref({
 })
 let nextRef = ref('')
 
+let inputRightData = ref({
+  selfDescribe: '',
+  degrees: [],
+  employments: [],
+  certificates : []
+})
 
 const handleDataInput = (data) => {
   inputData.value = data
@@ -48,9 +54,18 @@ const deleteSkill = (deletedSkill) => {
   }
 };
 const next = (value) => {
-  
   nextRef.value = value
 }
+
+const prev = () => {
+  nextRef.value = ''
+}
+
+const handleDataRightInput = (data) => {
+  inputRightData.value = data
+}
+
+
 
 
 
@@ -81,18 +96,6 @@ const next = (value) => {
   height: 100%;
   display: flex;
 }
-/* Classe pour cacher le composant LeftInputs avec une transition */
-.hide-left {
-  opacity: 0;
-  transform: translateY(-100%);
-  transition: opacity 0.5s, transform 0.5s;
-  pointer-events: none; /* Pour désactiver les interactions sur l'élément caché */
-}
 
-/* Classe pour afficher le composant RightInputs avec une transition */
-.show-right {
-  opacity: 1;
-  transform: translateY(0);
-  transition: opacity 0.5s, transform 0.5s;
-}
+/* Classe pour cacher le composant LeftInputs avec une transition */
 </style>

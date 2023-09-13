@@ -54,8 +54,8 @@
           </div>
           <div class="form-control">
             <label for="skill-level">Skill level</label>
-            <input @input="sendData" v-model="skill.skillLevel" type="range"
-              :name="'skill-level-' + index" :id="'skill-level-' + index" min="0" max="100" />
+            <input @input="sendData" v-model="skill.skillLevel" type="range" :name="'skill-level-' + index"
+              :id="'skill-level-' + index" min="0" max="100" />
           </div>
           <button @click="deleteSkill(index)" class="btn delete">Delete</button>
         </div>
@@ -98,21 +98,24 @@
         <div class="skill">
           <div class="form-control">
             <label for="hobbie">Ajouter vos hobbies</label>
-            <input placeholder="Foot, Lecture, voyage, etc..." @input="sendData" type="text" v-model="hobbies"
-              id="hobbie" />
+            <input placeholder="Enter your hobbies lists speareted by coma ex : Foot, reac, Natation " @input="sendData"
+              type="text" v-model="hobbies" id="hobbie" />
           </div>
         </div>
       </div>
     </div>
     <div class="next">
-      <button @click="this.$emit('next', 'clicked')" class="btn ">Suivant <i class="fa-solid fa-arrow-right"></i> </button>
-     
+      <button @click="this.$emit('next', 'clicked')" class="btn ">Suivant <i class="fa-solid fa-arrow-right"></i>
+      </button>
+
     </div>
   </div>
 </template>
 
 
 <script>
+import { addNew, deleteInputs } from '../utils/functions';
+
 
 export default {
   name: 'LeftInputs',
@@ -129,7 +132,7 @@ export default {
       newSkill: {},
       languages: [],
       newLanguage: {},
-      hobbies : ''
+      hobbies: ''
     }
   },
 
@@ -153,34 +156,30 @@ export default {
       })
     },
 
-    //Add new Element(Skill or language ) to the ancien
-    addNew(allElement, newElement) {
-      allElement.push(newElement)
-    },
-
-    // Delete a specific element in array of elements
-    async deleteInputs(index, allElement) {
-      const deletedElement = await allElement.splice(index, 1)[0];
-      this.sendData(); // Envoyer les données mises à jour
-      // Émettre un événement personnalisé pour informer le composant App de la suppression
-      this.$emit('delete-skill', deletedElement);
-    },
-
     // Add new Skill inputs with formatted names
     addSkill() {
-      this.addNew(this.skills, { ...this.newSkill, formattedNames: [] })
+      addNew(this.skills, { ...this.newSkill, formattedNames: [] })
       this.newSkill = {}
     },
     // Add new language inputs
     addLanguage() {
-      this.addNew(this.languages, { ...this.newLanguage })
+      addNew(this.languages, { ...this.newLanguage })
       this.newLanguage = {}
     },
-    deleteSkill(index) {
-      this.deleteInputs(index, this.skills)
+/*    async  deleteSpecificElement(index) {
+      const deletedElement = await deleteInputs(index, this.skills)
+      this.sendData(); // Envoyer les données mises à jour
+      this.$emit('delete-skill', deletedElement);
+    }, */
+    async deleteSkill(index) {
+      const deletedElement = await deleteInputs(index, this.skills)
+      this.sendData(); // Envoyer les données mises à jour
+      this.$emit('delete-skill', deletedElement);
     },
-    deleteLanguage(index) {
-      this.deleteInputs(index, this.languages)
+    async deleteLanguage(index) {
+      const deletedElement = await deleteInputs(index, this.languages)
+      this.sendData(); // Envoyer les données mises à jour
+      this.$emit('delete-skill', deletedElement);
     },
 
     formatNames(skill, skillIndex) {
@@ -191,8 +190,8 @@ export default {
       skill.formattedNames.splice(index, 1);
       skill.skillName = skill.formattedNames.join(' ');
     },
-    
-   
+
+
   }
 
 }

@@ -4,7 +4,7 @@
             <div class="imgProfile">
                 <img src="/img/empty.png" alt="">
             </div>
-            <div class="personalInfos">
+            <div v-if="data.firstName" class="personalInfos">
                 <h2 class="title">Personal details</h2>
                 <div class="content">
                     <div v-if="data.firstName" class="contentItems">
@@ -34,7 +34,7 @@
 
                 </div>
             </div>
-            <div class="skills">
+            <div v-if="data.skills.length > 0" class="skills">
                 <h2 class="title">Skills</h2>
                 <div class="content">
                     <div v-for="(skill, index) in data.skills" :key="index">
@@ -50,34 +50,34 @@
                     </div>
                 </div>
             </div>
-            <div class="languages">
+            <div v-if="data.languages.length > 0" class="languages">
                 <h2 class="title">languages</h2>
                 <div class="content">
                     <div v-for="(language, index) in data.languages" :key="index">
-                        
                         <div class="skillsContentItems">
                             <div class="fiels">{{ language['languageName'].toUpperCase() }}</div>
-                            <div  class="level">
+                            <div class="level">
                                 <span v-for="dotIndex in calculDotsNumber(language['languageLevel'])" :key="dotIndex"
                                     class="dot"></span>
                                 <span v-for="stopIndex in 5 - calculDotsNumber(language['languageLevel'])" :key="stopIndex"
                                     class="dot stop"></span>
                             </div>
-                        </div>  
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="hobbies">
+            <div v-if="data.hobbies.length > 0" class="hobbies">
                 <h2 class="title">hobbies</h2>
                 <div class="content">
-                    <div v-for="(hobbie,index) in data.hobbies.split(' ').filter(name => name.trim() !== '')" :key="index" class="contentItems">
+                    <div v-for="(hobbie, index) in data.hobbies.split(',').filter(name => name.trim() !== '')" :key="index"
+                        class="contentItems">
                         <div v-if="hobbie" class="rect"></div>
-                        <span v-if="hobbie">{{hobbie}}</span>
+                        <span v-if="hobbie">{{ hobbie }}</span>
                     </div>
                 </div>
             </div>
-           
-            
+
+
         </div>
     </div>
 </template>
@@ -87,7 +87,7 @@ export default {
     name: 'LeftCV',
     props: {
         data: Object,
-        next : String
+        next: String
     },
     methods: {
         calculDotsNumber(pixelNumber) {
@@ -127,6 +127,7 @@ i {
 .left-container .title::first-letter {
     text-transform: capitalize;
 }
+
 .username {
     text-transform: capitalize;
 }

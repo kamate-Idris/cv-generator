@@ -4,38 +4,38 @@
     <!-- Personal information inputs (First name, last name, contact etc...) -->
     <div class="personal-details">
       <div class="form-control">
-        <label for="description">Description</label>
-        <textarea name="description" id="description" cols="30" rows="5"></textarea>
+        <label for="description">Self Describe</label>
+        <textarea @input="sendData" v-model="selfDescribe" placeholder="Describe yourself" name="description" id="description" cols="30"
+          rows="5"></textarea>
       </div>
     </div>
     <!-- Education information inputs(skill field, skill level) -->
     <div class="skills">
       <div class="skills-header">
         <h2 class="title skills">Education</h2>
-        <button @click="addSkill" class="btn">Add new</button>
+        <button @click="addDegree" class="btn">Add new</button>
       </div>
       <!-- All skills created by user -->
       <div class="skills-input">
         <!--For Loop to display each skill-->
-        <div v-for="(skill, index) in skills" :key="index" class="skill">
+        <div v-for="(degree, index) in degrees" :key="index" class="skill">
           <div class="form-control">
             <label for="skill-name">Degree</label>
-            <input @input="sendData" v-model="skill.skillName" type="text" :name="'skill-name-' + index"
+            <input @input="sendData" v-model="degree.degreeName" type="text" :name="'skill-name-' + index"
               :id="'skill-name-' + index" />
           </div>
           <div class="form-control">
             <label for="skill-name">School</label>
-            <input @input="sendData" v-model="skill.skillName" type="text" :name="'skill-name-' + index"
+            <input @input="sendData" v-model="degree.degreeSchool" type="text" :name="'skill-name-' + index"
               :id="'skill-name-' + index" />
           </div>
           <div class="form-control">
             <label for="skill-name">Year</label>
-            <input @input="sendData" v-model="skill.skillName" type="text" :name="'skill-name-' + index"
+            <input @input="sendData" v-model="degree.degreeYear" type="text" :name="'skill-name-' + index"
               :id="'skill-name-' + index" />
           </div>
-          <button @click="deleteSkill(index)" class="btn delete">Delete</button>
+          <button @click="deleteDegree(index)" class="btn delete">Delete</button>
         </div>
-
       </div>
     </div>
 
@@ -43,40 +43,64 @@
     <div class="skills">
       <div class="skills-header">
         <h2 class="title skills">Employment</h2>
-        <button @click="addSkill" class="btn">Add new</button>
+        <button @click="addEmployment" class="btn">Add new</button>
       </div>
       <!-- All skills created by user -->
       <div class="skills-input">
         <!--For Loop to display each skill-->
-        <div v-for="(skill, index) in skills" :key="index" class="skill">
+        <div v-for="(employment, index) in employments" :key="index" class="skill">
           <div class="form-control">
             <label for="skill-name">Employment role</label>
-            <input @input="sendData" v-model="skill.skillName" type="text" :name="'skill-name-' + index"
+            <input @input="sendData" v-model="employment.employmentRole" type="text" :name="'skill-name-' + index"
               :id="'skill-name-' + index" />
           </div>
           <div class="form-control">
             <label for="skill-name">Location</label>
-            <input @input="sendData" v-model="skill.skillName" type="text" :name="'skill-name-' + index"
+            <input @input="sendData" v-model="employment.employmentLocation" type="text" :name="'skill-name-' + index"
               :id="'skill-name-' + index" />
           </div>
           <div class="form-control">
             <label for="skill-name">Year</label>
-            <input @input="sendData" v-model="skill.skillName" type="text" :name="'skill-name-' + index"
+            <input @input="sendData" v-model="employment.employmentYear" type="text" :name="'skill-name-' + index"
               :id="'skill-name-' + index" />
           </div>
           <div class="form-control">
             <label for="description">Brief description of your role</label>
-            <textarea name="description" id="description" cols="30" rows="5"></textarea>
+            <textarea v-model="employment.employmentRoleDescription" name="description" id="description" cols="30"
+              rows="5"></textarea>
           </div>
-          <button @click="deleteSkill(index)" class="btn delete">Delete</button>
+          <button @click="deleteEmployment(index)" class="btn delete">Delete</button>
         </div>
 
       </div>
     </div>
+    <div class="skills">
+      <div class="skills-header">
+        <h2 class="title skills">Certificates</h2>
+        <button @click="addCertificate" class="btn">Add new</button>
+      </div>
+      <!-- All skills created by user -->
+      <div class="skills-input">
+        <!--For Loop to display each skill-->
+        <div v-for="(certificate, index) in certificates" :key="index" class="skill">
+          <div class="form-control">
+            <label for="skill-name">Certificate name</label>
+            <input @input="sendData" v-model="certificate.name" type="text" :name="'skill-name-' + index"
+              :id="'skill-name-' + index" />
+          </div>
+          <div class="form-control">
+            <label for="skill-name">Year</label>
+            <input @input="sendData" v-model="certificate.year" type="text" :name="'skill-name-' + index"
+              :id="'skill-name-' + index" />
+          </div>
+          <button @click="deleteCertificate(index)" class="btn delete">Delete</button>
+        </div>
+      </div>
+    </div>
     <div class="prev">
-      <button  @click="this.$emit('prev', 'prevClicked')" class="btn prev"><i class="fa-sharp fa-solid fa-arrow-left"></i> precedent 
+      <button @click="this.$emit('prev', 'clicked')" class="btn prev"><i class="fa-sharp fa-solid fa-arrow-left"></i>
+        precedent
       </button>
-
     </div>
   </div>
 </template>
@@ -88,38 +112,24 @@ export default {
   name: 'LeftInputs',
   data() {
     return {
-      firstName: '',
-      lastName: '',
-      email: '',
-      phone: '',
-      birth: '',
-      livingArea: '',
-      // skillsInputs: false,
-      skills: [], // Tableau pour stocker les compétences
-      newSkill: {},
-      languages: [],
-      newLanguage: {},
-      hobbies: ''
+      selfDescribe: '',
+      degrees: [], // Tableau pour stocker les compétences
+      newDegree: {},
+      employments: [],
+      newEmployment: {},
+      certificates: [],
+      newCertificate: {},
+   
     }
   },
 
   methods: {
     sendData() {
-      // Exclure skillName de l'envoi des données
-      const skillsData = this.skills.map(skill => ({
-        skillLevel: skill.skillLevel,
-        formattedNames: skill.formattedNames,
-      }));
-      this.$emit('data-input', {
-        firstName: this.firstName,
-        lastName: this.lastName,
-        email: this.email,
-        phone: this.phone,
-        birth: this.birth,
-        livingArea: this.livingArea,
-        skills: skillsData,
-        languages: this.languages,
-        hobbies: this.hobbies
+      this.$emit('data-input-right', {
+        selfDescribe: this.selfDescribe,
+        degrees: this.degrees,
+        employments: this.employments,
+        certificates : this.certificates
       })
     },
 
@@ -137,20 +147,29 @@ export default {
     },
 
     // Add new Skill inputs with formatted names
-    addSkill() {
-      this.addNew(this.skills, { ...this.newSkill, formattedNames: [] })
-      this.newSkill = {}
+    addDegree() {
+      this.addNew(this.degrees, { ...this.newDegree })
+      this.newDegree = {}
     },
     // Add new language inputs
-    addLanguage() {
-      this.addNew(this.languages, { ...this.newLanguage })
-      this.newLanguage = {}
+    addEmployment() {
+      this.addNew(this.employments, { ...this.newEmployment })
+      this.newEmployment = {}
     },
-    deleteSkill(index) {
-      this.deleteInputs(index, this.skills)
+    addCertificate() {
+      this.addNew(this.certificates, { ...this.newCertificate })
+      this.newCertificate = {}
     },
-    deleteLanguage(index) {
-      this.deleteInputs(index, this.languages)
+
+
+    deleteDegree(index) {
+      this.deleteInputs(index, this.degrees)
+    },
+    deleteEmployment(index) {
+      this.deleteInputs(index, this.employments)
+    },
+    deleteCertificate(index) {
+      this.deleteInputs(index, this.certificates)
     },
 
     formatNames(skill, skillIndex) {
